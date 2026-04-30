@@ -78,11 +78,13 @@ def PrintCurrents(device, contact):
 #     the future is now.  I have added a workfunction to this, assuming the 
 #     material is aluminum
 def CreateOxideContact(device, region, contact):
+    set_parameter(device=device, region=region, name="WorkFunction", value=4.18)
+
     _conteq = "Permittivity*ElectricField"
     contact_bias_name = GetContactBiasName(contact)
     contact_model_name = GetContactNodeModelName(contact)
     # 4.61 = chi + Eg / 2 -- the distance down to Ei from vacuum
-    eq = "Potential - {0} + (4.18 - 4.61)".format(contact_bias_name)
+    eq = "Potential - {0} + (WorkFunction - 4.61)".format(contact_bias_name)
     CreateContactNodeModel(device, contact, contact_model_name, eq)
     CreateContactNodeModelDerivative(
         device, contact, contact_model_name, eq, "Potential"
