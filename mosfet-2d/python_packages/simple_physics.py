@@ -40,7 +40,7 @@ eps_ox = 3.9
 # TODO: make this temperature dependent
 n_i = 1.0e10  # #/cm^3
 # constant in our approximation
-mu_n = 400
+mu_n = 1400
 mu_p = 200
 
 
@@ -74,11 +74,15 @@ def PrintCurrents(device, contact):
 
 
 # in the future, worry about workfunction
+# ^^^ this is a comment from the code on devsim.  For the mosfet project,
+#     the future is now.  I have added a workfunction to this, assuming the 
+#     material is aluminum
 def CreateOxideContact(device, region, contact):
     _conteq = "Permittivity*ElectricField"
     contact_bias_name = GetContactBiasName(contact)
     contact_model_name = GetContactNodeModelName(contact)
-    eq = "Potential - {0}".format(contact_bias_name)
+    # 4.61 = chi + Eg / 2 -- the distance down to Ei from vacuum
+    eq = "Potential - {0} + (4.18 - 4.61)".format(contact_bias_name)
     CreateContactNodeModel(device, contact, contact_model_name, eq)
     CreateContactNodeModelDerivative(
         device, contact, contact_model_name, eq, "Potential"
